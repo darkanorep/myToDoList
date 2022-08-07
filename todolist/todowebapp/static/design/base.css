@@ -75,11 +75,6 @@ h1 {
 
 @media screen and (max-width: 1024px) {
 
-    .header {
-        text-align: center;
-        margin-top: 1.5rem;
-    }
-
     .nav-item {
         margin: 0;
     
