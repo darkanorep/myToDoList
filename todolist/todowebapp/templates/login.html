@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="../static/design/login.css">
+    </head>
+    <body>
+        <div class="container-fluid">
+            <div class="form">
+                <form method="post" action="/login">
+                    <div class="mb-3">
+                        <label class="form-label">Username</label>
+                        <input type="text" class="form-control" name="username" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-control" name="password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" name="submit">Login</button>
+                </form>
+                <hr>
+                <h6>Not a member?</h6>
+                <button class="btn btn-warning btn-sm">Signup</button>
+            </div>
+        </div>
+    </body>
+</html>
+
+{% endblock %}
