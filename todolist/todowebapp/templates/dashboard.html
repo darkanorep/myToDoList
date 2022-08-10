@@ -1,0 +1,21 @@
+{% extends 'session_base.html' %}
+
+{% block content %}
+<!DOCTYPE html>
+<html>
+    <link rel="stylesheet" href="../static/design/dashboard.css">
+    <div class="container header">
+        <div class="header-profile">
+            {% for row in user %}
+                <h3>{{row["username"]}}'s ToDo List</h3>
+            {% endfor %}
+        </div>
+        <div class="todo-form">
+            <form method="post" action="/add-todo">
+                <input type="text" name="todoName" placeholder="coding">
+                <button type="submit" class="btn btn-primary" name="submit">Add</button>
+            </form>
+        </div>
+    </div>
+</html>
+{% endblock %}

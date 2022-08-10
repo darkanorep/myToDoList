@@ -1,14 +1,27 @@
+from re import A
 from flask import Flask, Blueprint, flash, render_template, request, redirect, url_for, session
+from datetime import datetime
+from pytz import timezone
 import sqlite3
 
 auth = Blueprint('auth', __name__)
 
+# con = sqlite3.connect("todo.db")
+# con.row_factory = sqlite3.Row  
+# cur = con.cursor()
+
+def myDb():
+
+    con = sqlite3.connect("todo.db")
+
+    return con
 
 @auth.route("/signup", methods=['POST','GET'])
 def signUp():
 
-    with sqlite3.connect("todo.db") as con:
-        cur = con.cursor()
+    con  = myDb()
+    con.row_factory = sqlite3.Row  
+    cur = con.cursor()
 
     if request.method == 'POST':
         username = request.form.get('username')
@@ -34,8 +47,9 @@ def signUp():
 @auth.route("/login", methods=['GET', 'POST'])
 def login():
 
-    with sqlite3.connect("todo.db") as con:
-        cur = con.cursor()
+    con  = myDb()
+    con.row_factory = sqlite3.Row  
+    cur = con.cursor()
 
     if request.method == 'POST':
         username = request.form.get("username")
@@ -50,9 +64,62 @@ def login():
         
         else: 
             session["user"] = username
-            return redirect(url_for("auth.mytodolist"))
+            return redirect(url_for("auth.myToDoList"))
     
     return render_template("login.html")
+
+
+
+@auth.route("/mytodolist")
+def myToDoList():
+    
+    if "user" in session:
+
+        con  = myDb()
+        con.row_factory = sqlite3.Row  
+        cur = con.cursor()
+
+        username = session["user"]
+
+        cur.execute("SELECT * FROM User where username=?",([username]))
+        user = cur.fetchall()
+
+        return render_template("dashboard.html", user=user )
+    
+    else:
+        return redirect(url_for("auth.login"))
+
+
+@auth.route("/add-todo", methods=['POST', 'GET'])
+def addToDo():
+
+    if "user" in session:
+
+        con  = myDb()
+        con.row_factory = sqlite3.Row  
+        cur = con.cursor()
+
+        if request.method == 'POST':
+            username = session["user"]
+            todoName = request.form.get('todoName')
+
+            time_format = "%B %d, %Y %I:%M%p"
+            now = datetime.now().strftime(time_format)
+            tz = ['Asia/Manila']
+
+            for zone in tz:
+                date = datetime.now(timezone(zone)).strftime(time_format)
+
+            cur.execute("INSERT into ToDo (todo_name, date, username) values (?,?,?)",(todoName, date, username))
+            con.commit()
+
+            flash("Successfully Added!",category='success')
+
+        return render_template("dashboard.html")
+    
+    else:
+        return redirect(url_for("auth.login"))
+
 
 
 @auth.route("/logout")
@@ -61,15 +128,3 @@ def logout():
     session.pop("user", None)
 
     return redirect(url_for('auth.login'))
-
-@auth.route("mytodolist")
-def mytodolist():
-    if "user" in session:
-
-        return render_template("mytodolist.html")
-    
-    else:
-        return redirect(url_for("auth.login"))
-
-
-
