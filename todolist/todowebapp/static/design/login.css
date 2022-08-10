@@ -13,6 +13,14 @@
     display: inline-block;
 }
 
+.btn-signup {
+    color: black;
+}
+
+.btn-signup:hover {
+    color: black;
+}
+
 @media screen and (max-width: 1024px){
     .container-fluid {
         padding: 3rem 1.5rem 4rem 1.5rem;

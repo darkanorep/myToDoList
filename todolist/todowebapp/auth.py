@@ -55,9 +55,21 @@ def login():
     return render_template("login.html")
 
 
+@auth.route("/logout")
+def logout():
+
+    session.pop("user", None)
+
+    return redirect(url_for('auth.login'))
+
 @auth.route("mytodolist")
 def mytodolist():
+    if "user" in session:
 
-    return render_template("mytodolist.html")
+        return render_template("mytodolist.html")
+    
+    else:
+        return redirect(url_for("auth.login"))
+
 
 
