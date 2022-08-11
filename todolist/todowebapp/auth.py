@@ -84,7 +84,10 @@ def myToDoList():
         cur.execute("SELECT * FROM User where username=?",([username]))
         user = cur.fetchall()
 
-        return render_template("dashboard.html", user=user )
+        cur.execute("SELECT * FROM ToDO where username=?",([username]))
+        todo = cur.fetchall()
+
+        return render_template("dashboard.html", user=user, todo=todo )
     
     else:
         return redirect(url_for("auth.login"))
@@ -114,6 +117,7 @@ def addToDo():
             con.commit()
 
             flash("Successfully Added!",category='success')
+            return redirect(url_for('auth.myToDoList'))
 
         return render_template("dashboard.html")
     

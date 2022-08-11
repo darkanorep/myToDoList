@@ -12,9 +12,15 @@
         </div>
         <div class="todo-form">
             <form method="post" action="/add-todo">
-                <input type="text" name="todoName" placeholder="coding">
+                <input type="text" name="todoName" placeholder="coding" required>
                 <button type="submit" class="btn btn-primary" name="submit">Add</button>
             </form>
+        </div>
+        <div>
+            {% for row in todo %}
+                <br>
+                <l1>{{row["todo_name"]}}</l1>
+            {% endfor %}
         </div>
     </div>
 </html>
