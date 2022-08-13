@@ -1,4 +1,3 @@
-from re import A
 from flask import Flask, Blueprint, flash, render_template, request, redirect, url_for, session
 from datetime import datetime
 from pytz import timezone
@@ -124,7 +123,29 @@ def addToDo():
     else:
         return redirect(url_for("auth.login"))
 
+@auth.route("/delete-todo/<int:id>")
+def deleteToDo(id):
 
+    if "user" in session:
+
+        try:
+            con  = myDb()
+            con.row_factory = sqlite3.Row  
+            cur = con.cursor()
+
+            cur.execute("DELETE FROM ToDo where todo_id=?",([id]))
+            con.commit()
+
+            flash("Record Deleted Successfully",category='success')
+
+        except:
+            flash("Record Delete Failed","danger",category="error")
+
+        finally:
+            return redirect(url_for("auth.myToDoList"))
+    
+    else:
+        return redirect(url_for("auth.login"))
 
 @auth.route("/logout")
 def logout():

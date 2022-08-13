@@ -3,25 +3,48 @@
 {% block content %}
 <!DOCTYPE html>
 <html>
-    <link rel="stylesheet" href="../static/design/dashboard.css">
-    <div class="container header">
-        <div class="header-profile">
-            {% for row in user %}
-                <h3>{{row["username"]}}'s ToDo List</h3>
-            {% endfor %}
+    <head>
+        <link rel="stylesheet" href="../static/design/dashboard.css">
+        <script src="https://kit.fontawesome.com/dcfee5a626.js" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
+    </head>
+    <body>
+        <div class="container header">
+            <div class="header-profile">
+                {% for row in user %}
+                    <h3>{{row["username"]}}'s ToDo List</h3>
+                {% endfor %}
+            </div>
+            <div class="container-fluid">
+                <div class="main">
+                    <div class="todo-form">
+                        <form method="post" action="/add-todo">
+                            <input type="text" name="todoName" placeholder="coding..." required>
+                            <button type="submit" class="btn btn-primary" name="submit"><i class="fa-solid fa-plus"></i></button>
+                        </form>
+                    </div>
+                    <div id="tasks">
+                        {% for row in todo %}
+                        <div class="task">
+                            <div>
+                                <input type="checkbox">
+                                <span>{{row["todo_name"]}}</span>
+                                <div class="action">
+                                    <a href="">
+                                        <button type="submit"><i class="fa-solid fa-pencil"></i></button>
+                                    </a>
+                                    <a href="{{url_for('auth.deleteToDo',id=row['todo_id'])}}">
+                                        <button type="submit"><i class="fa-solid fa-trash"></i></button>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="todo-form">
-            <form method="post" action="/add-todo">
-                <input type="text" name="todoName" placeholder="coding" required>
-                <button type="submit" class="btn btn-primary" name="submit">Add</button>
-            </form>
-        </div>
-        <div>
-            {% for row in todo %}
-                <br>
-                <l1>{{row["todo_name"]}}</l1>
-            {% endfor %}
-        </div>
-    </div>
+    </body>
 </html>
 {% endblock %}
