@@ -1,0 +1,24 @@
+{% extends 'session_base.html' %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="../static/design/signup.css"/>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="form">
+            <form method="POST" action="/update_todo/{{data['todo_id']}}">
+                <div class="mb-3">
+                    <label class="form-label">ToDo Name</label>
+                    <input type="text" class="form-control" name="name" value="{{data['todo_name']}}">
+                </div>
+                <a href="{{url_for('auth.myToDoList')}}"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button></a>
+                <input type="submit" class="btn btn-success btn-block" value="Submit">
+            </form>
+        </div>
+    </div>
+</body>
+</html>
+{% endblock %}

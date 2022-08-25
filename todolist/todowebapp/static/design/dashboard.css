@@ -102,6 +102,10 @@
     margin-top: 0px;
 }
 
+input[type=checkbox]:checked + label.strikethrough{
+    text-decoration: line-through;
+  
+}
 
 @media screen and (max-width: 1024px){
     .container-fluid {

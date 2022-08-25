@@ -34,6 +34,7 @@ a:hover {
 
 }
 
+
 .navbar-brand {
     font-weight: 700;
     color: var(--white);
@@ -80,6 +81,12 @@ a:hover {
     border-top: .1rem solid #fff5;
     padding:2.5rem 1rem;
     text-align: center;
+}
+
+
+.dropdown-item:hover {
+    background-color: sandybrown;
+
 }
 
 @media screen and (max-width: 1024px) {
