@@ -15,6 +15,17 @@ def myDb():
 
     return con
 
+def time():
+
+    time_format = '%B %d, %Y %H:%M:%S.%f'[:-3]
+    now = datetime.now().strftime(time_format)
+    tz = ['Asia/Manila']
+
+    for zone in tz:
+        date = datetime.now(timezone(zone)).strftime(time_format)
+    
+    return date
+
 @auth.route("/signup", methods=['POST','GET'])
 def signUp():
 
@@ -33,6 +44,9 @@ def signUp():
 
         if data:
             flash("This username was already taken.", category='error')
+        
+        elif (password != confirmPassword):
+            flash("Password does not match.", category='error')
         
         else:
             cur.execute("INSERT into User (username, password, confirmPassword) values (?,?,?)",(username, password, confirmPassword))
@@ -83,47 +97,14 @@ def myToDoList():
         cur.execute("SELECT * FROM User where username=?",([username]))
         user = cur.fetchall()
 
-        cur.execute("SELECT * FROM ToDO where username=?",([username]))
+        cur.execute("SELECT * FROM ToDO where username=? and type='0' ORDER BY date desc",([username]))
         todo = cur.fetchall()
 
-        todoArray = []
-
-        for row in todo:
-
-            todo_id = row['todo_id']
-            # action = -1
-
-            cur.execute("SELECT type FROM ToDo WHERE todo_id=? AND username=?", [todo_id, username])
-            type = cur.fetchone()
-            # not_done = not_done['not_done']
+        cur.execute("SELECT * FROM ToDO where username=? and type='1' ORDER BY date desc",([username]))
+        done = cur.fetchall()
 
 
-            todoObjects = {
-                'todo_id': row['todo_id'],
-                'todo_name': row['todo_name'],
-                'type': type['type']
-            }
-
-            todoArray.append(todoObjects)
-
-            dtodos = jsonify(todoArray)   
-
-        return render_template('dashboard.html', user=user, todo=todo)
-    
-    else:
-        return redirect(url_for("auth.login"))
-
-
-@auth.route('/done-undone', methods=['POST', 'GET'])
-def doneundone():
-
-    if "user" in session:
-
-        con  = myDb()
-        con.row_factory = sqlite3.Row  
-        cur = con.cursor()
-
-        username = session["user"]
+        return render_template('dashboard.html', user=user, todo=todo, done=done)
     
     else:
         return redirect(url_for("auth.login"))
@@ -141,18 +122,13 @@ def addToDo():
         if request.method == 'POST':
             username = session["user"]
             todoName = request.form.get('todoName')
+            date = time()
 
-            # time_format = "%B %d, %Y %I:%M%p"
-            # now = datetime.now().strftime(time_format)
-            # tz = ['Asia/Manila']
-
-            # for zone in tz:
-            #     date = datetime.now(timezone(zone)).strftime(time_format)
-
-            cur.execute("INSERT into ToDo (todo_name, username, type) values (?,?,?)",(todoName, username, 0))
+            cur.execute("INSERT into ToDo (todo_name, username, date, type) values (?,?,?,?)",(todoName, username, date, 0))
             con.commit()
 
             flash("Successfully Added!",category='success')
+            
             return redirect(url_for('auth.myToDoList'))
 
         return render_template("dashboard.html")
@@ -160,7 +136,7 @@ def addToDo():
     else:
         return redirect(url_for("auth.login"))
 
-@auth.route("/delete-todo/<int:id>")
+@auth.route("/delete-todo/<id>")
 def deleteToDo(id):
 
     if "user" in session:
@@ -216,6 +192,78 @@ def updateToDo(id):
     else:
         return redirect(url_for("auth.login"))
 
+@auth.route("/done-todo/<id>")
+def doneToDo(id):
+
+    if "user" in session:
+
+        try:
+            con  = myDb()
+            con.row_factory = sqlite3.Row  
+            cur = con.cursor()
+            date = time()
+
+            cur.execute("UPDATE ToDO SET type='1' where todo_id=?",([id]))
+            con.commit()
+
+            flash("Congrats!!",category='success')
+
+        except:
+            flash("Record Delete Failed","danger",category="error")
+
+        finally:
+            return redirect(url_for("auth.myToDoList"))
+    
+    else:
+        return redirect(url_for("auth.login"))
+
+@auth.route("/undone-todo/<id>")
+def undoneToDo(id):
+
+    if "user" in session:
+
+        try:
+            con  = myDb()
+            con.row_factory = sqlite3.Row  
+            cur = con.cursor()
+
+            cur.execute("UPDATE ToDO SET type='0' where todo_id=?",([id]))
+            con.commit()
+
+            flash("Successfully Undone!!",category='success')
+
+        except:
+            flash("Record Delete Failed","danger",category="error")
+
+        finally:
+            return redirect(url_for("auth.myToDoList"))
+    
+    else:
+        return redirect(url_for("auth.login"))
+
+@auth.route("/delete-done/<id>")
+def deleteDone(id):
+
+    if "user" in session:
+
+        try:
+            con  = myDb()
+            con.row_factory = sqlite3.Row  
+            cur = con.cursor()
+
+            cur.execute("DELETE FROM ToDo where todo_id=?",([id]))
+            con.commit()
+
+            flash("Record Deleted Successfully",category='success')
+
+        except:
+            flash("Record Delete Failed","danger",category="error")
+
+        finally:
+            return redirect(url_for("auth.myToDoList"))
+    
+    else:
+        return redirect(url_for("auth.login"))
 
 @auth.route("/logout")
 def logout():

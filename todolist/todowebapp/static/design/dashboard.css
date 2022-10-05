@@ -1,3 +1,7 @@
+h3 {
+    padding-top: 10px;
+}
+
 .header {
     text-align: center;
     margin-top: 1.5rem;
@@ -8,9 +12,10 @@
     padding: 1% 25%;
 }
 
-.main {
+.row {
     background-color: sandybrown;
     border-radius: 20px;
+    margin-bottom: 20px;
 }
 .edit{
     width: 100%;
@@ -86,7 +91,34 @@
     font-weight: 500;
 }
 
+.complete-task{
+    color: white;
+    border-radius: 5px;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid#F78F28;
+    cursor: pointer;
+    background-color: #FA7323;
+    height: 50px;
+    margin-bottom: 8px;
+    padding: 5px 10px;
+    display: flex;
+}
+.complete-task span{
+    font-family: 'Poppins',sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+}
+
 .task button{
+    background-color: #0a2ea4;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    
+}
+
+.complete-task button{
     background-color: #0a2ea4;
     color: #ffffff;
     border: none;
@@ -102,9 +134,23 @@
     margin-top: 0px;
 }
 
+#complete-tasks{
+    border-radius: 10px;
+    width: 100%;
+    position: relative;
+    padding: 20px 30px;
+    margin-top: 0px;
+}
+
 input[type=checkbox]:checked + label.strikethrough{
     text-decoration: line-through;
   
+}
+
+span.strikethrough{
+    text-decoration: line-through;
+    text-decoration-thickness: 0.2rem;
+    text-decoration-color: black;
 }
 
 @media screen and (max-width: 1024px){

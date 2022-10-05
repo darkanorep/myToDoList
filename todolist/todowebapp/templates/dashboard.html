@@ -17,26 +17,53 @@
                 {% endfor %}
             </div>
             <div class="container-fluid">
-                <div class="main">
-                    <div class="todo-form">
-                        <form method="post" action="/add-todo">
-                            <input type="text" name="todoName" placeholder="coding..." required>
-                            <button type="submit" class="btn btn-primary" name="submit"><i class="fa-solid fa-plus"></i></button>
-                        </form>
-                    </div>
+                <div class="todo-form">
+                    <form method="post" action="/add-todo">
+                        <input type="text" name="todoName" placeholder="coding..." required>
+                        <button type="submit" class="btn btn-primary" name="submit"><i class="fa-solid fa-plus"></i></button>
+                    </form>
+                </div>
+                <div class="row">
+                    <h3>Progress</h3>
                     <div id="tasks">
                         {% for row in todo %}
                         <div class="task">
                             <div>
-                                <input type="checkbox" />
-                                <!-- <span for="packers" class="strikethrough">{{row["todo_name"]}}</span> -->
-                                <label for="packers" class="strikethrough"><span>{{row["todo_name"]}}</span></label>
+                                <!-- <input type="checkbox" />
+                                <span for="packers" class="strikethrough">{{row["todo_name"]}}</span> -->
+                                <span>{{row["todo_name"]}}</span>
                                 <div class="action">
+                                    <a href="{{url_for('auth.doneToDo',id=row['todo_id'])}}">
+                                        <button type="submit"><i class="fa-solid fa-check"></i></button>
+                                    </a>
                                     <a href="{{url_for('auth.updateToDo',id=row['todo_id'])}}">
                                         <button type="submit"><i class="fa-solid fa-pencil"></i></button>
                                     </a>
                                     <a href="{{url_for('auth.deleteToDo',id=row['todo_id'])}}">
                                         <button type="submit"><i class="fa-solid fa-trash"></i></button>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="row">
+                    <h3>Done</h3>
+                    <div id="complete-tasks">
+                        {% for row in done %}
+                        <div class="complete-task">
+                            <div>
+                                <span class="strikethrough">{{row["todo_name"]}}</span>
+                                <div class="action">
+                                    <a href="{{url_for('auth.undoneToDo',id=row['todo_id'])}}">
+                                        <button type="submit"><i class="fa-solid fa-arrow-rotate-left"></i></button>
+                                    </a>
+                                    <!-- <a href="{{url_for('auth.updateToDo',id=row['todo_id'])}}">
+                                        <button type="submit"><i class="fa-solid fa-pencil"></i></button>
+                                    </a> -->
+                                    <a href="{{url_for('auth.deleteDone',id=row['todo_id'])}}">
+                                        <button type="submit"><i class="fa-solid fa-xmark"></i></button>
                                     </a>
                                 </div>
                             </div>
